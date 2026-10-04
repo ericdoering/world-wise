@@ -20,7 +20,7 @@ export const country = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-        name: 'country image',
+        name: 'countryImage',
         title: 'Country Image',
         type: 'image',
         description: 'An image representing the shape of the country.',
@@ -29,7 +29,7 @@ export const country = defineType({
         },
     }),
     defineField({
-        name: 'flag image',
+        name: 'flagImage',
         title: 'Flag Image',
         type: 'image',
         description: 'An image of the country flag.',
