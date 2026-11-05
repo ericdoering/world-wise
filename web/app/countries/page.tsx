@@ -1,25 +1,25 @@
 
-// import { createClient } from "next-sanity";
+import { createClient } from "next-sanity";
 
-// const client = createClient({
-//   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-//   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-//   apiVersion: "2025-01-01",
-//   useCdn: false,
-// });
+const client = createClient({
+  projectId: "icoz935j",
+  dataset: "production",
+  apiVersion: "2025-01-01",
+  useCdn: false,
+});
 
-// type Country = {
-//   _id: string;
-//   name: string;
-// };
+type Country = {
+  _id: string;
+  name: string;
+};
 
 export default async function CountriesPage() {
-  // const countries = await client.fetch<Country[]>(
-  //   `*[_type == "country" && defined(name)] | order(name asc) {
-  //     _id,
-  //     name
-  //   }`
-  // );
+  const countries = await client.fetch<Country[]>(
+    `*[_type == "country" && defined(name)] | order(name asc) {
+      _id,
+      name
+    }`
+  );
 
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-16 text-white">
@@ -28,7 +28,7 @@ export default async function CountriesPage() {
           Countries of the World
         </h1>
 
-        {/* <p className="mb-8 text-slate-400">
+        <p className="mb-8 text-slate-400">
           Explore {countries.length} countries
         </p>
 
@@ -41,7 +41,7 @@ export default async function CountriesPage() {
               {country.name}
             </li>
           ))}
-        </ul> */}
+        </ul>
       </div>
     </main>
   );
