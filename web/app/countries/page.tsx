@@ -1,23 +1,19 @@
 
-import { createClient } from "next-sanity";
-
-const client = createClient({
-  projectId: "icoz935j",
-  dataset: "production",
-  apiVersion: "2025-01-01",
-  useCdn: false,
-});
+import Image from "next/image";
+import { client } from "../client";
 
 type Country = {
   _id: string;
   name: string;
+  flagUrl: string | null;
 };
 
 export default async function CountriesPage() {
   const countries = await client.fetch<Country[]>(
     `*[_type == "country" && defined(name)] | order(name asc) {
       _id,
-      name
+      name,
+      "flagUrl": flagImage.asset->url
     }`
   );
 
@@ -32,13 +28,23 @@ export default async function CountriesPage() {
           Explore {countries.length} countries
         </p>
 
-        <ul className="divide-y divide-slate-800">
+        <ul className="divide-y divide-slate-800 cursor-pointer">
           {countries.map((country) => (
             <li
               key={country._id}
-              className="py-3 text-lg transition-colors hover:text-emerald-400"
+              className="flex items-center gap-10 py-8 text-lg transition-colors hover:text-emerald-400"
             >
-              {country.name}
+              {country.flagUrl && (
+                <Image
+                  src={country.flagUrl}
+                  alt={`${country.name} flag`}
+                  width={100}
+                  height={80}
+                  className="rounded-sm object-cover"
+                />
+              )}
+
+              <span className="font-medium">{country.name}</span>
             </li>
           ))}
         </ul>
