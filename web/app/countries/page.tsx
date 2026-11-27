@@ -1,18 +1,20 @@
-
 import Image from "next/image";
+import Link from "next/link";
 import { client } from "../client";
 
 type Country = {
   _id: string;
   name: string;
+  slug: string;
   flagUrl: string | null;
 };
 
 export default async function CountriesPage() {
   const countries = await client.fetch<Country[]>(
-    `*[_type == "country" && defined(name)] | order(name asc) {
+    `*[_type == "country" && defined(name) && defined(slug.current)] | order(name asc) {
       _id,
       name,
+      "slug": slug.current,
       "flagUrl": flagImage.asset->url
     }`
   );
@@ -28,23 +30,27 @@ export default async function CountriesPage() {
           Explore {countries.length} countries
         </p>
 
-        <ul className="divide-y divide-slate-800 cursor-pointer">
+        <ul className="divide-y divide-slate-800">
           {countries.map((country) => (
-            <li
-              key={country._id}
-              className="flex items-center gap-10 py-8 text-lg transition-colors hover:text-emerald-400"
-            >
-              {country.flagUrl && (
-                <Image
-                  src={country.flagUrl}
-                  alt={`${country.name} flag`}
-                  width={100}
-                  height={80}
-                  className="rounded-sm object-cover"
-                />
-              )}
+            <li key={country._id}>
+              <Link
+                href={`/countries/${country.slug}`}
+                className="flex items-center gap-10 py-8 text-lg transition-colors hover:text-emerald-400 cursor-pointer"
+              >
+                {country.flagUrl && (
+                  <Image
+                    src={country.flagUrl}
+                    alt={`${country.name} flag`}
+                    width={100}
+                    height={80}
+                    className="rounded-sm object-cover"
+                  />
+                )}
 
-              <span className="font-medium">{country.name}</span>
+                <span className="font-medium">
+                  {country.name}
+                </span>
+              </Link>
             </li>
           ))}
         </ul>
